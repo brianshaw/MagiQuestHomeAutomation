@@ -1,5 +1,20 @@
 # MagiQuestHomeAutomation
 
+sudo apt update
+sudo apt install python3-pip
+sudo apt install pigpio python3-pigpio
+sudo systemctl enable pigpiod
+sudo apt install git
+sudo apt install vim
+git clone https://github.com/brianshaw/MagiQuestHomeAutomation.git
+sudo vi /root/firmware/config.txt
+
+add
+
+dtoverlay=gpio-ir,gpio_pin=14
+
+
+pip3 install -r requirements.txt
 
 
 # OLD
