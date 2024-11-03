@@ -19,6 +19,7 @@ def playsound(key):
   # play(song)
   # os.system(f'afplay {self.soundpath}{self.sounds[key]}')
   # return_code = subprocess.Popen(f'afplay {soundpath}{sounds[key]}', shell=True)
+  print(f'file {soundpath}{sounds[key]}')
   afplay(f'{soundpath}{sounds[key]}')
   # afplay(f'{soundpath}{sounds[key]}', volume=2, time=100, leaks=True)
 
