@@ -7,6 +7,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # soundpath = '/Users/brianshaw/Repos/MagiQuestHomeAutomation/'
 soundpath = dir_path + '/'
+print(f'soundpath {soundpath}')
 sounds = {
   '0': 'ding-126626.mp3',
   '5': '5-monster-roar.mp3'
