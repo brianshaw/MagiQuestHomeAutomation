@@ -1,6 +1,6 @@
 # from pydub import AudioSegment
 # from pydub.playback import play
-# import subprocess
+import subprocess
 from afplay import afplay
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -19,8 +19,8 @@ def playsound(key):
   # play(song)
   # os.system(f'afplay {self.soundpath}{self.sounds[key]}')
   # return_code = subprocess.Popen(f'afplay {soundpath}{sounds[key]}', shell=True)
-  print(f'file {soundpath}{sounds[key]}')
-  afplay(f'{soundpath}{sounds[key]}')
+  return_code = subprocess.Popen(f'mpg123 {soundpath}{sounds[key]}', shell=True)
+  
   # afplay(f'{soundpath}{sounds[key]}', volume=2, time=100, leaks=True)
 
 

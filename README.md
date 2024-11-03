@@ -1,13 +1,14 @@
 # MagiQuestHomeAutomation
 
 sudo apt update
-sudo apt install python3-pip
-sudo apt install python3-virtualenv
-sudo apt install pigpio python3-pigpio
+sudo apt -y install python3-pip
+sudo apt -y install python3-virtualenv
+sudo apt -y install pigpio python3-pigpio
 sudo systemctl enable pigpiod
-sudo apt install git
-sudo apt install vim
-sudo apt install ffmpeg
+sudo apt -y install git
+sudo apt -y install vim
+sudo apt -y install ffmpeg
+sudo apt -t install mpg123
 git clone https://github.com/brianshaw/MagiQuestHomeAutomation.git
 sudo vi /root/firmware/config.txt
 
@@ -23,22 +24,9 @@ pip3 install -r requirements.txt
 
 
 
-bluetoothctl
-scan on
-[CHG] Device 00:0C:8A:C1:27:58 Name: Bose Mini SoundLink
-[CHG] Device 00:0C:8A:C1:27:58 Alias: Bose Mini SoundLink
-power on
-trust 00:0C:8A:C1:27:58
-pairing on
-pair 00:0C:8A:C1:27:58
-
-
-
-
-Maybe - "dtparam=audio=on" so that it looks like "#dtparam=audio=on" 
-
 https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
 https://www.sigmdel.ca/michel/ha/rpi/bluetooth_02_en.html
+
 
 # OLD
 
