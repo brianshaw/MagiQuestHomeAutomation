@@ -3,3 +3,4 @@ asyncio
 pigpio
 argparse
 RPi.GPIO
+pydub

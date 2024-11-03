@@ -20,13 +20,19 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ^--- takes a while
 
+bluetoothctl
+scan on
+[CHG] Device 00:0C:8A:C1:27:58 Name: Bose Mini SoundLink
+[CHG] Device 00:0C:8A:C1:27:58 Alias: Bose Mini SoundLink
+power on
+trust 00:0C:8A:C1:27:58
+pairing on
+pair 00:0C:8A:C1:27:58
 
-
-
-
+Maybe - "dtparam=audio=on" so that it looks like "#dtparam=audio=on" 
 
 https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
-
+https://www.sigmdel.ca/michel/ha/rpi/bluetooth_02_en.html
 
 # OLD
 
