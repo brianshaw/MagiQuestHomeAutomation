@@ -2,6 +2,7 @@
 
 sudo apt update
 sudo apt install python3-pip
+sudo apt install python3-virtualenv
 sudo apt install pigpio python3-pigpio
 sudo systemctl enable pigpiod
 sudo apt install git
@@ -12,10 +13,12 @@ sudo vi /root/firmware/config.txt
 add
 
 dtoverlay=gpio-ir,gpio_pin=14
+sudo reboot
 
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
+^--- takes a while
 
 
 # OLD
