@@ -59,7 +59,7 @@ def main():
         GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
         while True: # Run forever
           if GPIO.input(10) == GPIO.HIGH:
-              print("Button was pushed!")
+              # print("Button was pushed!")
               if t0 == -1:
                   t0 = time.time()
               t1 = time.time()
