@@ -1,5 +1,6 @@
 import argparse
 import kasalights
+import time
 
 
 def main():
@@ -47,6 +48,11 @@ def main():
     # elif args["image"]:
     if args['rpi']:
         print('rpi')
+        
+        t0 = -1
+        t1 = -1
+
+        # total = t1-t0
         import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
         GPIO.setwarnings(False) # Ignore warning for now
         GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
@@ -54,6 +60,19 @@ def main():
         while True: # Run forever
           if GPIO.input(10) == GPIO.HIGH:
               print("Button was pushed!")
+              if t0 == -1:
+                  t0 = time.time()
+              t1 = time.time()
+              total = t1-t0
+              if (total > 0.5):
+                  print(f"Button was pressed! {total}")
+          elif t0 >= 0 and GPIO.input(10) == GPIO.LOW:
+              # t1 = time.time()
+              # total = t1-t0
+              # if (total > 0.5):
+              #     print(f"Button was released! {total}")
+              t0 = -1
+              t1 = -1
 
 
 main()

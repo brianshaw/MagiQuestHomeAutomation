@@ -21,6 +21,13 @@ pip3 install -r requirements.txt
 ^--- takes a while
 
 
+
+
+
+
+https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
+
+
 # OLD
 
 MagiQuest IR Signal Decoder

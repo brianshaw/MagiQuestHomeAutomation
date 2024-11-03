@@ -2,3 +2,4 @@ python-kasa
 asyncio
 pigpio
 argparse
+RPi.GPIO
