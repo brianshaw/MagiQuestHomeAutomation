@@ -8,7 +8,7 @@ sudo systemctl enable pigpiod
 sudo apt -y install git
 sudo apt -y install vim
 sudo apt -y install ffmpeg
-sudo apt -t install mpg321
+sudo apt -y install mpg321
 git clone https://github.com/brianshaw/MagiQuestHomeAutomation.git
 sudo vi /root/firmware/config.txt
 
