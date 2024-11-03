@@ -11,10 +11,10 @@ def main():
     #     "-C", "--cam", metavar="cam_id", nargs="?", const=0,
     #     help="Camera or video capture device ID or path. [Default 0]"
     # )
-    # source_args.add_argument(
-    #     "-I", "--image", type=pathlib.Path, metavar="<path>",
-    #     help="Path to image file or directory of images."
-    # )
+    source_args.add_argument(
+        "-R", "--rpi", action="store_true",
+        help="Run on Raspberry Pi"
+    )
     source_args.add_argument(
         "-L", "--light", action="store", type=str, nargs='?', const='plug',
         help="Test Light 'plug' (default if empty), 'strip'"
@@ -45,7 +45,15 @@ def main():
             asyncio.run(lights.test())
         exit()
     # elif args["image"]:
-        
+    if args['rpi']:
+        print('rpi')
+        import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+        GPIO.setwarnings(False) # Ignore warning for now
+        GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+        GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+        while True: # Run forever
+          if GPIO.input(10) == GPIO.HIGH:
+              print("Button was pushed!")
 
 
 main()

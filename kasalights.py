@@ -15,7 +15,8 @@ class LightControl():
     self.lightsready = False
 
   def start(self):
-    self.devices['powerstrip'] = SmartStrip('192.168.8.185')
+    self.devices['powerstrip'] = SmartStrip('192.168.37.210')
+    # self.devices['powerstrip'] = SmartStrip('192.168.8.185')
     # self.devices['plug'] = SmartPlug('192.168.8.121')
     # self.devices['powerstrip'] = SmartStrip('192.168.1.210')
     # self.devices['plug'] = SmartPlug('192.168.1.231')
