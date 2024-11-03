@@ -7,6 +7,7 @@ sudo apt install pigpio python3-pigpio
 sudo systemctl enable pigpiod
 sudo apt install git
 sudo apt install vim
+sudo apt install ffmpeg
 git clone https://github.com/brianshaw/MagiQuestHomeAutomation.git
 sudo vi /root/firmware/config.txt
 
@@ -20,6 +21,8 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ^--- takes a while
 
+
+
 bluetoothctl
 scan on
 [CHG] Device 00:0C:8A:C1:27:58 Name: Bose Mini SoundLink
@@ -28,6 +31,9 @@ power on
 trust 00:0C:8A:C1:27:58
 pairing on
 pair 00:0C:8A:C1:27:58
+
+
+
 
 Maybe - "dtparam=audio=on" so that it looks like "#dtparam=audio=on" 
 

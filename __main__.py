@@ -35,10 +35,10 @@ def main():
     other_args.add_argument(
         "-v", "--verbose", action="store_true", help="Verbose output"
     )
-    other_args.add_argument(
-        "-T", "--test", action="store_true", default=False,
-        help="test"
-    )
+    # other_args.add_argument(
+    #     "-T", "--test", action="store_true", default=False,
+    #     help="test"
+    # )
     
 
     args = vars(parser.parse_args())
