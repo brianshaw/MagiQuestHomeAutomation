@@ -1,6 +1,7 @@
 import argparse
 import kasalights
 import time
+import Sound
 
 
 def main():
@@ -24,6 +25,10 @@ def main():
     #     "-V", "--video", type=pathlib.Path, metavar="<path>",
     #     help="Path to video file"
     # )
+    source_args.add_argument(
+        "-T", "--test", action="store_true", default=False,
+        help="test"
+    )
 
     other_args = parser.add_argument_group(title="Output/display options")
     
@@ -34,6 +39,7 @@ def main():
         "-T", "--test", action="store_true", default=False,
         help="test"
     )
+    
 
     args = vars(parser.parse_args())
     # print(f'args {args}')
@@ -73,6 +79,7 @@ def main():
               #     print(f"Button was released! {total}")
               t0 = -1
               t1 = -1
-
-
+    if args['test']:
+        Sound.test()
+        exit()
 main()
