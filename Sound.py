@@ -2,9 +2,11 @@
 # from pydub.playback import play
 # import subprocess
 from afplay import afplay
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
-soundpath = '/Users/brianshaw/Repos/MagiQuestHomeAutomation/'
-# soundpath = ''
+# soundpath = '/Users/brianshaw/Repos/MagiQuestHomeAutomation/'
+soundpath = dir_path + '/'
 sounds = {
   '0': 'ding-126626.mp3',
   '5': '5-monster-roar.mp3'
