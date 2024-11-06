@@ -7,9 +7,14 @@ class RpiButtonsLeds:
 
     def __init__(self, buttonCallback=None, debug=False):
       self.buttonCallback = buttonCallback
+      self.setupGPIO()
       self.setup_buttons()
       self.setup_leds()
 
+    def setupGPIO(self):
+      GPIO.setwarnings(False) # Ignore warning for now
+      GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+    
     def setup_buttons(self):
       print('setup buttons')
     
