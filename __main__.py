@@ -157,6 +157,7 @@ async def main():
 
 
 async def cleanup():
+    print('Cleaning up...')
     if rpiButtonsLeds:
         print('Cleaning up RpiButtonsLeds...')
         rpiButtonsLeds.ledOff()
