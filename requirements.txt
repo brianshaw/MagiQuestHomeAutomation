@@ -3,4 +3,3 @@ asyncio
 pigpio
 argparse
 RPi.GPIO
-atexit
