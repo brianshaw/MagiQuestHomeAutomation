@@ -5,7 +5,7 @@ import Sound
 from Stepper import Stepper
 from magiquest_receiver import MagiQuestReceiver
 import asyncio
-from rpi_buttons_leds import RpiButtonsLeds
+
 import atexit
 
 rpiButtonsLeds = None
@@ -95,7 +95,10 @@ async def main():
     #           t0 = -1
     #           t1 = -1
     if args['test']:
-        Sound.test()
+        if args['rpi']:
+          Sound.test(app='mpg321')
+        else:
+          Sound.test(app='afplay')
         exit()
     
     # import asyncio
@@ -141,6 +144,7 @@ async def main():
         debug=True
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
+      from rpi_buttons_leds import RpiButtonsLeds
       rpiButtonsLeds = RpiButtonsLeds()
       rpiButtonsLeds.ledOn()
       await receiver.start()
