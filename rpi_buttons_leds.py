@@ -22,20 +22,22 @@ class RpiButtonsLeds:
       print('setup leds')
       # Set up the GPIO pin for the LED
       GPIO.setup(self.LED_PIN, GPIO.OUT)
-
-      try:
-        # Turn on the LED
-        GPIO.output(self.LED_PIN, GPIO.HIGH)
-        print("LED is ON")
-        time.sleep(1)  # Keep the LED on for 1 second
-
-        # Turn off the LED
-        GPIO.output(self.LED_PIN, GPIO.LOW)
-        print("LED is OFF")
-      finally:
-        # Clean up the GPIO settings
-        GPIO.cleanup()
-
+    
+    def ledOn(self):
+      # Turn on the LED
+      GPIO.output(self.LED_PIN, GPIO.HIGH)
+      print("LED is ON")
+    
+    def ledOff(self):
+      # Turn off the LED
+      GPIO.output(self.LED_PIN, GPIO.LOW)
+      print("LED is OFF")
+    
+    def resetLed(self):
+      self.ledOff()
+      self.cleanup()
+    def cleanup():
+      GPIO.cleanup()
 # print('rpi')
         
 # t0 = -1

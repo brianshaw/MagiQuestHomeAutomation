@@ -6,6 +6,9 @@ from Stepper import Stepper
 from magiquest_receiver import MagiQuestReceiver
 import asyncio
 from rpi_buttons_leds import RpiButtonsLeds
+import atexit
+
+rpiButtonsLeds = None
 
 async def main():
     parser = argparse.ArgumentParser()
@@ -49,6 +52,7 @@ async def main():
     
 
     args = vars(parser.parse_args())
+
     # print(f'args {args}')
     if args["light"]:
         # import asyncio
@@ -134,6 +138,7 @@ async def main():
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
       rpiButtonsLeds = RpiButtonsLeds()
+      rpiButtonsLeds.ledOn()
       await receiver.start()
       
       
@@ -149,8 +154,21 @@ async def main():
       except KeyboardInterrupt:
           print("Exiting the program.")
 
+
+
+
+def exit_handler():
+    print('My application is ending!')
+    if rpiButtonsLeds:
+        rpiButtonsLeds.ledOff()
+
+atexit.register(exit_handler)
+
+
 # main()
 # asyncio.run(main())
+
+
 # Check if the event loop is already running
 try:
     asyncio.get_running_loop()
