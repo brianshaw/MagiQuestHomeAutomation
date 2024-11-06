@@ -7,6 +7,7 @@ from magiquest_receiver import MagiQuestReceiver
 import asyncio
 from rpi_buttons_leds import RpiButtonsLeds
 import atexit
+import asyncio_atexit
 
 rpiButtonsLeds = None
 lights = None
@@ -165,7 +166,8 @@ async def exit_handler():
     if lights:
         await lights.resetLightStrip()
 
-atexit.register(exit_handler)
+# atexit.register(exit_handler)
+asyncio_atexit.register(exit_handler)
 
 
 # main()
