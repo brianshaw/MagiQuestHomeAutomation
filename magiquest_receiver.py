@@ -1,5 +1,5 @@
 import pigpio
-import time
+import asyncio
 
 class MagiQuestReceiver:
     # Constants based on the MagiQuest protocol
@@ -48,6 +48,7 @@ class MagiQuestReceiver:
             self.debug_print("Not enough pulses received.")
             return
 
+        # Decode start bits
         for _ in range(2):
             if i + 1 >= num_pulses:
                 self.debug_print("Incomplete start bits.")
@@ -60,6 +61,7 @@ class MagiQuestReceiver:
                 self.debug_print("Invalid start bit.")
                 return
 
+        # Decode wand_id
         for bit_index in range(32):
             if i + 1 >= num_pulses:
                 self.debug_print("Incomplete wand_id bits.")
@@ -76,6 +78,7 @@ class MagiQuestReceiver:
             wand_id = (wand_id << 1) | bit
             i += 2
 
+        # Decode magnitude
         for bit_index in range(16):
             if i + 1 >= num_pulses:
                 self.debug_print("Incomplete magnitude bits.")
@@ -108,7 +111,7 @@ class MagiQuestReceiver:
         else:
             self.debug_print("Invalid stop bit.")
 
-    async def process_signal(self, gpio, level, tick):
+    def process_signal(self, gpio, level, tick):
         if level == pigpio.TIMEOUT:
             return
 
@@ -118,7 +121,8 @@ class MagiQuestReceiver:
         if pulse_length > self.PULSE_THRESHOLD:
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
-                await self.decode_pulses()
+                # Schedule the decoding in the asyncio event loop
+                asyncio.run_coroutine_threadsafe(self.decode_pulses(), asyncio.get_event_loop())
                 self.pulses = []
             return
 
@@ -128,7 +132,7 @@ class MagiQuestReceiver:
         print("MagiQuest receiver started. Listening for signals...")  # Always print this message
         try:
             while True:
-                time.sleep(1)
+                await asyncio.sleep(1)  # Use asyncio sleep to avoid blocking the event loop
         except KeyboardInterrupt:
             print("Exiting...")  # Always print this message
             if self.pulses:
@@ -136,3 +140,14 @@ class MagiQuestReceiver:
                 await self.decode_pulses()
         finally:
             self.pi.stop()
+
+# # Example usage
+# async def success_callback(wand_id, magnitude, human_readable_magnitude):
+#     print(f"Received wand ID: {wand_id}, magnitude: {magnitude}, human-readable magnitude: {human_readable_magnitude}")
+
+# if __name__ == "__main__":
+#     receiver = MagiQuestReceiver(successCallback=success_callback, debug=True)
+#     try:
+#         asyncio.run(receiver.start())
+#     except Exception as e:
+#         print(f"Error: {e}")
