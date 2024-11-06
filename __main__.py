@@ -96,9 +96,10 @@ async def main():
     #           t1 = -1
     if args['test']:
         if args['rpi']:
-          Sound.test(app='aplay')
+          app='aplay'
         else:
-          Sound.test(app='afplay')
+          app='afplay'
+        Sound.test(app=app)
         exit()
     
     # import asyncio
