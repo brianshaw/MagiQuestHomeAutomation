@@ -133,8 +133,8 @@ async def main():
         debug=True
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
-      await receiver.start()
       rpiButtonsLeds = RpiButtonsLeds()
+      await receiver.start()
       
       
     else:
