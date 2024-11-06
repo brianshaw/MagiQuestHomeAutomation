@@ -96,7 +96,7 @@ async def main():
     #           t1 = -1
     if args['test']:
         if args['rpi']:
-          Sound.test(app='mpg321')
+          Sound.test(app='aplay')
         else:
           Sound.test(app='afplay')
         exit()
