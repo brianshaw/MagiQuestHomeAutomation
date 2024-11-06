@@ -7,7 +7,7 @@ class RpiButtonsLeds:
 
     def __init__(self, buttonCallback=None, debug=False):
       self.buttonCallback = buttonCallback
-      slef.setup_buttons()
+      self.setup_buttons()
       self.setup_leds()
 
     def setup_buttons(self):
