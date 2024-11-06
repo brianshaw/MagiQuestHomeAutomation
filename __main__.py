@@ -165,7 +165,7 @@ async def cleanup():
         rpiButtonsLeds.ledOff()
     if lights:
         print('Cleaning up LightControl...')
-        await lights.resetLightStrip()
+        asyncio.run(lights.resetLightStrip())
 
 def exit_handler():
     print('Shutting Down MagiQuest Receiver...')
