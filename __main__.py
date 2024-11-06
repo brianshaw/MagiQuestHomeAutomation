@@ -156,14 +156,15 @@ async def main():
           print("Exiting the program.")
 
 
-
-
-def exit_handler():
-    print('Shutting Down MagiQuest Receiver...')
+async def cleanup():
     if rpiButtonsLeds:
         rpiButtonsLeds.ledOff()
     if lights:
-        lights.resetLightStrip()
+        await lights.resetLightStrip()
+
+def exit_handler():
+    print('Shutting Down MagiQuest Receiver...')
+    asyncio.run(cleanup())
 
 atexit.register(exit_handler)
 
