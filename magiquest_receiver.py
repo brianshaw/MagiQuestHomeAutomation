@@ -37,7 +37,7 @@ class MagiQuestReceiver:
     def is_within_tolerance(self, value, target):
         return abs(value - target) <= self.TOLERANCE
 
-    def decode_pulses(self):
+    async def decode_pulses(self):
         i = 0
         num_pulses = len(self.pulses)
         wand_id = 0
@@ -104,11 +104,11 @@ class MagiQuestReceiver:
 
             # Call the success callback if provided
             if self.successCallback:
-                self.successCallback(wand_id, magnitude, human_readable_magnitude)
+                await self.successCallback(wand_id, magnitude, human_readable_magnitude)
         else:
             self.debug_print("Invalid stop bit.")
 
-    def process_signal(self, gpio, level, tick):
+    async def process_signal(self, gpio, level, tick):
         if level == pigpio.TIMEOUT:
             return
 
@@ -118,13 +118,13 @@ class MagiQuestReceiver:
         if pulse_length > self.PULSE_THRESHOLD:
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
-                self.decode_pulses()
+                await self.decode_pulses()
                 self.pulses = []
             return
 
         self.pulses.append(pulse_length)
 
-    def start(self):
+    async def start(self):
         print("MagiQuest receiver started. Listening for signals...")  # Always print this message
         try:
             while True:
@@ -133,6 +133,6 @@ class MagiQuestReceiver:
             print("Exiting...")  # Always print this message
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
-                self.decode_pulses()
+                await self.decode_pulses()
         finally:
             self.pi.stop()
