@@ -3,7 +3,6 @@ import kasalights
 import time
 import Sound
 from Stepper import Stepper
-import keyboard
 from magiquest_receiver import MagiQuestReceiver
 
 
