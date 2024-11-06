@@ -5,6 +5,7 @@ import Sound
 from Stepper import Stepper
 from magiquest_receiver import MagiQuestReceiver
 import asyncio
+from rpi_buttons_leds import RpiButtonsLeds
 
 async def main():
     parser = argparse.ArgumentParser()
@@ -133,6 +134,8 @@ async def main():
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
       await receiver.start()
+      rpiButtonsLeds = RpiButtonsLeds()
+      
       
     else:
       print("Press the space bar to execute the next step.")
