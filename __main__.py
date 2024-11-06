@@ -4,22 +4,9 @@ import time
 import Sound
 from Stepper import Stepper
 from magiquest_receiver import MagiQuestReceiver
+import asyncio
 
-
-# Define step methods
-def step1():
-    print("Executing Step 1")
-    # Perform Step 1 operations here
-
-def step2():
-    print("Executing Step 2")
-    # Perform Step 2 operations here
-
-def step3():
-    print("Executing Step 3")
-    # Perform Step 3 operations here
-
-def main():
+async def main():
     parser = argparse.ArgumentParser()
 
     source_ = parser.add_argument_group(title="input source [required]")
@@ -63,7 +50,7 @@ def main():
     args = vars(parser.parse_args())
     # print(f'args {args}')
     if args["light"]:
-        import asyncio
+        # import asyncio
         lights = kasalights.LightControl().start()
         if args["light"] == 'strip':
             asyncio.run(lights.testStrip())
@@ -102,15 +89,43 @@ def main():
         Sound.test()
         exit()
     
-    
+    # import asyncio
+    lights = kasalights.LightControl().start()
+    # asyncio.run(lights.testStrip(dur=1))
+    await lights.testStrip(dur=1)
+    # Define step methods
+    async def step1():
+        print("Start Doing Step 1")
+        # asyncio.run(lights.testStrip())
+        # asyncio.run(lights.onLight(0))
+        await lights.onLight(0)
+
+    async def step2():
+        print("Start Doing Step 2")
+        # Perform Step 2 operations here
+        # asyncio.run(lights.onLight(1))
+        await lights.onLight(1)
+
+    async def step3():
+        print("Start Doing Step 3")
+        # Perform Step 3 operations here
+        # asyncio.run(lights.onLight(2))
+        await lights.onLight(2)
+
+    async def reset_method_callback():
+        print("reset_method_callback")
+        # Perform cleanup tasks here
+        await lights.resetLightStrip()
+        print("reset_method_callback cleandup done")
+
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3]  # Pass function objects directly
     end_timer_reset = 5  # Time to wait before resetting after all steps executed
-    stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods)
+    stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback)
 
-    def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
+    async def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
       print(f"Callback invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
-      stepper.execute_step()
+      await stepper.execute_step()
     
     debug=False
     if args['debug']:
@@ -126,8 +141,17 @@ def main():
             if user_input.lower() == 'exit':
                 print("Exiting the program.")
                 break
-            stepper.execute_step()
+            await stepper.execute_step()
       except KeyboardInterrupt:
           print("Exiting the program.")
 
-main()
+# main()
+# asyncio.run(main())
+# Check if the event loop is already running
+try:
+    asyncio.get_running_loop()
+    # If the loop is already running, just run the main function
+    asyncio.ensure_future(main())
+except RuntimeError:
+    # No loop is running, so we can safely run it
+    asyncio.run(main())

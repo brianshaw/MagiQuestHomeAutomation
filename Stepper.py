@@ -1,15 +1,17 @@
 import time
+import asyncio
 
 class Stepper:
-    def __init__(self, steps, step_wait_time, end_timer_reset, step_methods):
+    def __init__(self, steps, step_wait_time, end_timer_reset, step_methods, reset_method=None):
         self.steps = steps  # Total number of steps
         self.current_step = 0  # Current step index
         self.step_wait_time = step_wait_time  # Time to wait between steps
         self.end_timer_reset = end_timer_reset  # Time to wait before resetting
         self.last_step_time = time.time()  # Track last step execution time
         self.step_methods = step_methods  # List of step method functions
+        self.reset_method = reset_method
 
-    def execute_step(self):
+    async def execute_step(self):
         current_time = time.time()
 
         if self.current_step < self.steps:
@@ -18,26 +20,27 @@ class Stepper:
                 method = self.step_methods[self.current_step]
                 if method:
                     print(f"Executing {method.__name__}...")
-                    method()  # Call the method directly
+                    await method()  # Await the method call
                 
                 self.last_step_time = current_time  # Update last step execution time
                 self.current_step += 1  # Increment to the next step
 
                 if self.current_step == self.steps:
-                    # If last step was executed, print "All steps executed"
                     print("All steps executed.")
-                    time.sleep(self.end_timer_reset)  # Wait before resetting
-                    self.reset()  # Call the reset method
+                    await asyncio.sleep(self.end_timer_reset)  # Use await here
+                    await self.reset()  # Reset method can be sync since it doesn't await
             else:
                 print("Waiting for the next step...")
         else:
-            print("All steps executed.")  # Just in case this is called again
+            print("All steps executed.")
 
-    def reset(self):
+    async def reset(self):
         print("Resetting the stepper process...")
         self.current_step = 0
         self.last_step_time = time.time()
         # Perform cleanup tasks here
+        if self.reset_method:
+            await self.reset_method()  # Call the reset method if definedß
         print("Stepper process reset.")
 
 # # Define step methods

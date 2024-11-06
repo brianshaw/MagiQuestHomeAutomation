@@ -9,7 +9,7 @@ from kasa import SmartPlug, SmartDevice, SmartStrip
 
 class LightControl():
   def __init__(self):
-    print('lights enabled')
+    print('Lights enabled')
     # self.dev = SmartPlug("192.168.1.232")
     self.devices = {}
     self.lightsready = False
@@ -40,21 +40,21 @@ class LightControl():
     # asyncio.run(dev.turn_on())
     # asyncio.run(dev.update())
   
-  async def testStrip (self):
+  async def testStrip (self, dur=0.5):
     print('test power strip 1, 2, 3')
     await self.devices['powerstrip'].update()
     await self.devices['powerstrip'].children[0].turn_on()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     await self.devices['powerstrip'].children[1].turn_on()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     await self.devices['powerstrip'].children[2].turn_on()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     await self.devices['powerstrip'].children[0].turn_off()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     await self.devices['powerstrip'].children[1].turn_off()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     await self.devices['powerstrip'].children[2].turn_off()
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(dur)
     # await self.devices['powerstrip'].turn_off()
 
   async def onPlugLight (self):
@@ -66,14 +66,19 @@ class LightControl():
     await self.devices['powerstrip'].update()
     await self.devices['powerstrip'].children[lightkey].turn_on()
 
-  
-  async def resetLights (self):
+  async def resetLightStrip (self):
     await self.devices['powerstrip'].update()
     await self.devices['powerstrip'].children[0].turn_off()
     await self.devices['powerstrip'].children[1].turn_off()
     await self.devices['powerstrip'].children[2].turn_off()
+  
+  async def resetLightPlug (self):
     await self.devices['plug'].update()
     await self.devices['plug'].turn_off()
+
+  async def resetLights (self):
+    await self.resetLightStrip()
+    await self.resetLightPlug()
     
   async def flashLights (self):
     # dev = SmartPlug("192.168.1.232")
