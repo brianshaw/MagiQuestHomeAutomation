@@ -159,7 +159,7 @@ async def main():
 
 
 def exit_handler():
-    print('My application is ending!')
+    print('Shutting Down MagiQuest Receiver...')
     if rpiButtonsLeds:
         rpiButtonsLeds.ledOff()
     if lights:
