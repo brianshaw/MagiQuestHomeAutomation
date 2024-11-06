@@ -158,8 +158,10 @@ async def main():
 
 async def cleanup():
     if rpiButtonsLeds:
+        print('Cleaning up RpiButtonsLeds...')
         rpiButtonsLeds.ledOff()
     if lights:
+        print('Cleaning up LightControl...')
         await lights.resetLightStrip()
 
 def exit_handler():
