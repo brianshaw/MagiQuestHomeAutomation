@@ -71,33 +71,33 @@ def main():
             asyncio.run(lights.test())
         exit()
     # elif args["image"]:
-    if args['rpi']:
-        print('rpi')
+    # if args['rpi']:
+    #     print('rpi')
         
-        t0 = -1
-        t1 = -1
+    #     t0 = -1
+    #     t1 = -1
 
-        # total = t1-t0
-        import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
-        GPIO.setwarnings(False) # Ignore warning for now
-        GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
-        GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
-        while True: # Run forever
-          if GPIO.input(10) == GPIO.HIGH:
-              # print("Button was pushed!")
-              if t0 == -1:
-                  t0 = time.time()
-              t1 = time.time()
-              total = t1-t0
-              if (total > 0.5):
-                  print(f"Button was pressed! {total}")
-          elif t0 >= 0 and GPIO.input(10) == GPIO.LOW:
-              # t1 = time.time()
-              # total = t1-t0
-              # if (total > 0.5):
-              #     print(f"Button was released! {total}")
-              t0 = -1
-              t1 = -1
+    #     # total = t1-t0
+    #     import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+    #     GPIO.setwarnings(False) # Ignore warning for now
+    #     GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+    #     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+    #     while True: # Run forever
+    #       if GPIO.input(10) == GPIO.HIGH:
+    #           # print("Button was pushed!")
+    #           if t0 == -1:
+    #               t0 = time.time()
+    #           t1 = time.time()
+    #           total = t1-t0
+    #           if (total > 0.5):
+    #               print(f"Button was pressed! {total}")
+    #       elif t0 >= 0 and GPIO.input(10) == GPIO.LOW:
+    #           # t1 = time.time()
+    #           # total = t1-t0
+    #           # if (total > 0.5):
+    #           #     print(f"Button was released! {total}")
+    #           t0 = -1
+    #           t1 = -1
     if args['test']:
         Sound.test()
         exit()
@@ -115,18 +115,19 @@ def main():
     debug=False
     if args['debug']:
         debug=True
-    receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
-    receiver.start()
-    
-    # print("Press the space bar to execute the next step.")
-    # try:
-    #     while True:
-    #       user_input = input()  # Wait for user to press Enter
-    #       if user_input.lower() == 'exit':
-    #           print("Exiting the program.")
-    #           break
-    #       stepper.execute_step()
-    # except KeyboardInterrupt:
-    #     print("Exiting the program.")
+    if args['rpi']:
+      receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
+      receiver.start()
+    else:
+      print("Press the space bar to execute the next step.")
+      try:
+          while True:
+            user_input = input()  # Wait for user to press Enter
+            if user_input.lower() == 'exit':
+                print("Exiting the program.")
+                break
+            stepper.execute_step()
+      except KeyboardInterrupt:
+          print("Exiting the program.")
 
 main()

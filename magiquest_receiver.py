@@ -125,12 +125,12 @@ class MagiQuestReceiver:
         self.pulses.append(pulse_length)
 
     def start(self):
-        self.debug_print("MagiQuest receiver started. Listening for signals...")
+        print("MagiQuest receiver started. Listening for signals...")  # Always print this message
         try:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            self.debug_print("Exiting...")
+            print("Exiting...")  # Always print this message
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
                 self.decode_pulses()
