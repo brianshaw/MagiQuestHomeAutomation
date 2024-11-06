@@ -9,6 +9,7 @@ from rpi_buttons_leds import RpiButtonsLeds
 import atexit
 
 rpiButtonsLeds = None
+lights = None
 
 async def main():
     parser = argparse.ArgumentParser()
@@ -161,6 +162,8 @@ def exit_handler():
     print('My application is ending!')
     if rpiButtonsLeds:
         rpiButtonsLeds.ledOff()
+    if lights:
+        lights.resetLightStrip()
 
 atexit.register(exit_handler)
 
