@@ -164,7 +164,7 @@ async def exit_handler():
     if rpiButtonsLeds:
         rpiButtonsLeds.ledOff()
     if lights:
-        await lights.resetLightStrip()
+        asyncio.run(lights.resetLightStrip())
 
 # atexit.register(exit_handler)
 asyncio_atexit.register(exit_handler)
