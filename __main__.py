@@ -12,6 +12,7 @@ rpiButtonsLeds = None
 lights = None
 
 async def main():
+    global rpiButtonsLeds, lights
     parser = argparse.ArgumentParser()
 
     source_ = parser.add_argument_group(title="input source [required]")
