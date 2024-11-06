@@ -132,8 +132,8 @@ async def main():
         debug=True
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
-      # await receiver.start()
-      asyncio.run(receiver.start())
+      await receiver.start()
+      
     else:
       print("Press the space bar to execute the next step.")
       try:

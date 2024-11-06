@@ -1,5 +1,7 @@
 import pigpio
 import asyncio
+import queue
+import threading
 
 class MagiQuestReceiver:
     # Constants based on the MagiQuest protocol
@@ -22,6 +24,7 @@ class MagiQuestReceiver:
         self.pi = pigpio.pi()
         self.successCallback = successCallback
         self.debug = debug
+        self.pulse_queue = queue.Queue()
         
         if not self.pi.connected:
             raise Exception("Failed to connect to pigpio daemon.")
@@ -38,6 +41,14 @@ class MagiQuestReceiver:
         return abs(value - target) <= self.TOLERANCE
 
     async def decode_pulses(self):
+        while not self.pulse_queue.empty():
+            pulse_length = self.pulse_queue.get()
+            self.pulses.append(pulse_length)
+
+            if len(self.pulses) > 2:
+                await self.process_decoding()
+
+    async def process_decoding(self):
         i = 0
         num_pulses = len(self.pulses)
         wand_id = 0
@@ -121,18 +132,20 @@ class MagiQuestReceiver:
         if pulse_length > self.PULSE_THRESHOLD:
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
-                # Schedule the decoding in the asyncio event loop
+                # Signal ended, decode pulses
                 asyncio.run_coroutine_threadsafe(self.decode_pulses(), asyncio.get_event_loop())
                 self.pulses = []
             return
 
-        self.pulses.append(pulse_length)
+        # Add pulse length to the queue for processing in the main loop
+        self.pulse_queue.put(pulse_length)
 
     async def start(self):
         print("MagiQuest receiver started. Listening for signals...")  # Always print this message
         try:
             while True:
-                await asyncio.sleep(1)  # Use asyncio sleep to avoid blocking the event loop
+                await self.decode_pulses()  # Process the queue for pulses
+                await asyncio.sleep(0.1)  # Check for new pulses periodically
         except KeyboardInterrupt:
             print("Exiting...")  # Always print this message
             if self.pulses:
