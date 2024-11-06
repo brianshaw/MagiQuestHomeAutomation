@@ -23,11 +23,15 @@ async def main():
     #     "-C", "--cam", metavar="cam_id", nargs="?", const=0,
     #     help="Camera or video capture device ID or path. [Default 0]"
     # )
-    source_args.add_argument(
+    
+
+    other_args = parser.add_argument_group(title="Output/display options")
+    
+    other_args.add_argument(
         "-R", "--rpi", action="store_true",
         help="Run on Raspberry Pi"
     )
-    source_args.add_argument(
+    other_args.add_argument(
         "-L", "--light", action="store", type=str, nargs='?', const='plug',
         help="Test Light 'plug' (default if empty), 'strip'"
     )
@@ -35,17 +39,14 @@ async def main():
     #     "-V", "--video", type=pathlib.Path, metavar="<path>",
     #     help="Path to video file"
     # )
-    source_args.add_argument(
+    other_args.add_argument(
         "-T", "--test", action="store_true", default=False,
         help="test"
     )
-    source_args.add_argument(
+    other_args.add_argument(
         "-D", "--debug", action="store_true", default=False,
         help="debug mode"
     )
-
-    other_args = parser.add_argument_group(title="Output/display options")
-    
     other_args.add_argument(
         "-v", "--verbose", action="store_true", help="Verbose output"
     )
