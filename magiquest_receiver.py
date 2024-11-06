@@ -1,7 +1,6 @@
 import pigpio
 import asyncio
 import queue
-import threading
 
 class MagiQuestReceiver:
     # Constants based on the MagiQuest protocol
@@ -132,9 +131,7 @@ class MagiQuestReceiver:
         if pulse_length > self.PULSE_THRESHOLD:
             if self.pulses:
                 self.debug_print("Signal ended. Decoding pulses.")
-                # Signal ended, decode pulses
-                asyncio.run_coroutine_threadsafe(self.decode_pulses(), asyncio.get_event_loop())
-                self.pulses = []
+                self.pulses.clear()  # Clear previous pulses if any
             return
 
         # Add pulse length to the queue for processing in the main loop
