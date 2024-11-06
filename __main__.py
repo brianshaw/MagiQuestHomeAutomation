@@ -57,11 +57,11 @@ async def main():
     # print(f'args {args}')
     if args["light"]:
         # import asyncio
-        lights = kasalights.LightControl().start()
+        lightsTest = kasalights.LightControl().start()
         if args["light"] == 'strip':
-            asyncio.run(lights.testStrip())
+            asyncio.run(lightsTest.testStrip())
         else:
-            asyncio.run(lights.test())
+            asyncio.run(lightsTest.test())
         exit()
     # elif args["image"]:
     # if args['rpi']:
