@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 class RpiButtonsLeds:
-    LED_PIN = 18
+    LED_PIN = 16
     BUTTON_PIN = 10
 
     def __init__(self, buttonCallback=None, debug=False):
