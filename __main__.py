@@ -44,6 +44,10 @@ def main():
         "-T", "--test", action="store_true", default=False,
         help="test"
     )
+    source_args.add_argument(
+        "-D", "--debug", action="store_true", default=False,
+        help="debug mode"
+    )
 
     other_args = parser.add_argument_group(title="Output/display options")
     
@@ -107,8 +111,11 @@ def main():
     def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
       print(f"Callback invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
       stepper.execute_step()
- 
-    receiver = MagiQuestReceiver(successCallback=handle_success_callback)
+    
+    debug=False
+    if args['debug']:
+        debug=True
+    receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
     receiver.start()
     
     # print("Press the space bar to execute the next step.")
