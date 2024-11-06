@@ -2,13 +2,29 @@ import argparse
 import kasalights
 import time
 import Sound
+from Stepper import Stepper
+import keyboard
+from magiquest_receiver import MagiQuestReceiver
 
+
+# Define step methods
+def step1():
+    print("Executing Step 1")
+    # Perform Step 1 operations here
+
+def step2():
+    print("Executing Step 2")
+    # Perform Step 2 operations here
+
+def step3():
+    print("Executing Step 3")
+    # Perform Step 3 operations here
 
 def main():
     parser = argparse.ArgumentParser()
 
     source_ = parser.add_argument_group(title="input source [required]")
-    source_args = source_.add_mutually_exclusive_group(required=True)
+    source_args = source_.add_mutually_exclusive_group() # (required=True)
     # source_args.add_argument(
     #     "-C", "--cam", metavar="cam_id", nargs="?", const=0,
     #     help="Camera or video capture device ID or path. [Default 0]"
@@ -82,4 +98,29 @@ def main():
     if args['test']:
         Sound.test()
         exit()
+    
+    
+    # List of methods to be executed as steps
+    step_methods = [step1, step2, step3]  # Pass function objects directly
+    end_timer_reset = 5  # Time to wait before resetting after all steps executed
+    stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods)
+
+    def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
+      print(f"Callback invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
+      stepper.execute_step()
+ 
+    receiver = MagiQuestReceiver(successCallback=handle_success_callback)
+    receiver.start()
+    
+    # print("Press the space bar to execute the next step.")
+    # try:
+    #     while True:
+    #       user_input = input()  # Wait for user to press Enter
+    #       if user_input.lower() == 'exit':
+    #           print("Exiting the program.")
+    #           break
+    #       stepper.execute_step()
+    # except KeyboardInterrupt:
+    #     print("Exiting the program.")
+
 main()

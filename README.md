@@ -28,6 +28,12 @@ https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
 https://www.sigmdel.ca/michel/ha/rpi/bluetooth_02_en.html
 
 
+removed these
+
+pydub
+afplay-py
+
+
 # OLD
 
 MagiQuest IR Signal Decoder

@@ -20,7 +20,7 @@ def playsound(key):
   # os.system(f'afplay {self.soundpath}{self.sounds[key]}')
   # return_code = subprocess.Popen(f'afplay {soundpath}{sounds[key]}', shell=True)
   return_code = subprocess.Popen(f'mpg321 {soundpath}{sounds[key]}', shell=True)
-  
+  # return_code.kill()
   # afplay(f'{soundpath}{sounds[key]}', volume=2, time=100, leaks=True)
 
 
