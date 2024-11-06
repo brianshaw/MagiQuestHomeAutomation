@@ -12,6 +12,8 @@ rpiButtonsLeds = None
 lights = None
 
 async def main():
+  try:
+    
     global rpiButtonsLeds, lights
     parser = argparse.ArgumentParser()
 
@@ -155,6 +157,9 @@ async def main():
             await stepper.execute_step()
       except KeyboardInterrupt:
           print("Exiting the program.")
+  finally:
+      # Ensure cleanup is called before exit
+      await cleanup()
 
 
 async def cleanup():
@@ -170,14 +175,14 @@ async def cleanup():
         except RuntimeError:
             print("Event loop is closed. Skipping async cleanup.")
 
-def exit_handler():
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        asyncio.run_coroutine_threadsafe(cleanup(), loop)
-    else:
-        print("Event loop is not running, skipping async cleanup.")
+# def exit_handler():
+#     loop = asyncio.get_event_loop()
+#     if loop.is_running():
+#         asyncio.run_coroutine_threadsafe(cleanup(), loop)
+#     else:
+#         print("Event loop is not running, skipping async cleanup.")
 
-atexit.register(exit_handler)
+# atexit.register(exit_handler)
 
 
 # main()
