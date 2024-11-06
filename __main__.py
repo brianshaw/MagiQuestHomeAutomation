@@ -158,12 +158,12 @@ async def main():
 
 
 
-def exit_handler():
+async def exit_handler():
     print('Shutting Down MagiQuest Receiver...')
     if rpiButtonsLeds:
         rpiButtonsLeds.ledOff()
     if lights:
-        lights.resetLightStrip()
+        await lights.resetLightStrip()
 
 atexit.register(exit_handler)
 
