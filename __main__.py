@@ -165,11 +165,17 @@ async def cleanup():
         rpiButtonsLeds.ledOff()
     if lights:
         print('Cleaning up LightControl...')
-        await lights.resetLightStrip()
+        try:
+            await lights.resetLightStrip()
+        except RuntimeError:
+            print("Event loop is closed. Skipping async cleanup.")
 
 def exit_handler():
-    print('Shutting Down MagiQuest Receiver...')
-    asyncio.run(cleanup())
+    loop = asyncio.get_event_loop()
+    if loop.is_running():
+        asyncio.run_coroutine_threadsafe(cleanup(), loop)
+    else:
+        print("Event loop is not running, skipping async cleanup.")
 
 atexit.register(exit_handler)
 
