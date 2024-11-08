@@ -130,7 +130,7 @@ async def main():
         # Perform Step 2 operations here
         # asyncio.run(lights.onLight(1))
         # await Sound.test(app=app)
-        # Sound.playsound('1', app=app)
+        await Sound.playsound('1', app=app)
         await lights.onLight(1)
         executingStep = False
 
