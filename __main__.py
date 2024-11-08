@@ -104,6 +104,10 @@ async def main():
       await Sound.test(app=app)
       exit()
     
+    if args['rpi']:
+      from rpi_buttons_leds import RpiButtonsLeds
+      rpiButtonsLeds = RpiButtonsLeds()
+
     # import asyncio
     lights = kasalights.LightControl().start()
     executingStep = False
@@ -121,33 +125,39 @@ async def main():
     async def step2():
         print("Start Doing Step 2")
         executingStep = True
+        rpiButtonsLeds.ledOff()
         # Perform Step 2 operations here
         # asyncio.run(lights.onLight(1))
         # await Sound.test(app=app)
         # Sound.playsound('1', app=app)
         await lights.onLight(1)
         executingStep = False
+        rpiButtonsLeds.ledOn()
 
     async def step3():
         print("Start Doing Step 3")
         executingStep = True
+        rpiButtonsLeds.ledOff()
         # Perform Step 3 operations here
         # asyncio.run(lights.onLight(2))
         await lights.onLight(2)
         executingStep = False
+        rpiButtonsLeds.ledOn()
 
     async def reset_method_callback():
         print("reset_method_callback")
         executingStep = True
+        rpiButtonsLeds.ledOff()
         # Perform cleanup tasks here
         await lights.resetLightStrip()
         print("reset_method_callback cleandup done")
         executingStep = False
+        rpiButtonsLeds.ledOn()
 
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3]  # Pass function objects directly
     end_timer_reset = 5  # Time to wait before resetting after all steps executed
-    stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback)
+    stepper = Stepper(steps=len(step_methods), step_wait_time=5, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback)
 
     async def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
       if executingStep:
@@ -161,8 +171,8 @@ async def main():
         debug=True
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
-      from rpi_buttons_leds import RpiButtonsLeds
-      rpiButtonsLeds = RpiButtonsLeds()
+      # from rpi_buttons_leds import RpiButtonsLeds
+      # rpiButtonsLeds = RpiButtonsLeds()
       rpiButtonsLeds.ledOn()
       await receiver.start()
       
