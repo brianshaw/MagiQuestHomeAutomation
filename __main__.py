@@ -96,8 +96,8 @@ async def main():
     #           t0 = -1
     #           t1 = -1
     if args['rpi']:
-      app='sudo aplay'
-      # app='mpg321'
+      # app='sudo aplay'
+      app='mpg321'
     else:
       app='afplay'
     if args['test']:
