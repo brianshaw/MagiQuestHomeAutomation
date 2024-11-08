@@ -122,6 +122,7 @@ async def main():
         # asyncio.run(lights.testStrip())
         # asyncio.run(lights.onLight(0))
         await lights.onLight(0)
+        await Sound.playsound('1', app=app)
         executingStep = False
 
     async def step2():
@@ -131,15 +132,15 @@ async def main():
         # Perform Step 2 operations here
         # asyncio.run(lights.onLight(1))
         # await Sound.test(app=app)
-        Sound.playsound('1', app=app)
         await lights.onLight(1)
+        await Sound.playsound('2', app=app)
         executingStep = False
 
     async def step3():
         print("Start Doing Step 3")
         executingStep = True
         rpiButtonsLeds.ledOff()
-        
+        await Sound.playsound('3', app=app)
         executingStep = False
     
     async def step4():
@@ -149,6 +150,7 @@ async def main():
         # Perform Step 3 operations here
         # asyncio.run(lights.onLight(2))
         await lights.onLight(2)
+        await Sound.playsound('4', app=app)
         executingStep = False
 
     async def reset_method_callback():
