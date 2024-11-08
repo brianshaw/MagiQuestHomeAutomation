@@ -95,42 +95,54 @@ async def main():
     #           #     print(f"Button was released! {total}")
     #           t0 = -1
     #           t1 = -1
+    if args['rpi']:
+      app='aplay'
+    else:
+      app='afplay'
     if args['test']:
-        if args['rpi']:
-          app='aplay'
-        else:
-          app='afplay'
-        Sound.test(app=app)
-        exit()
+      # Sound.test(app=app)
+      await Sound.test(app=app)
+      exit()
     
     # import asyncio
     lights = kasalights.LightControl().start()
+    executingStep = False
     # asyncio.run(lights.testStrip(dur=1))
     await lights.testStrip(dur=1)
     # Define step methods
     async def step1():
         print("Start Doing Step 1")
+        executingStep = True
         # asyncio.run(lights.testStrip())
         # asyncio.run(lights.onLight(0))
         await lights.onLight(0)
+        executingStep = False
 
     async def step2():
         print("Start Doing Step 2")
+        executingStep = True
         # Perform Step 2 operations here
         # asyncio.run(lights.onLight(1))
+        # await Sound.test(app=app)
+        # Sound.playsound('1', app=app)
         await lights.onLight(1)
+        executingStep = False
 
     async def step3():
         print("Start Doing Step 3")
+        executingStep = True
         # Perform Step 3 operations here
         # asyncio.run(lights.onLight(2))
         await lights.onLight(2)
+        executingStep = False
 
     async def reset_method_callback():
         print("reset_method_callback")
+        executingStep = True
         # Perform cleanup tasks here
         await lights.resetLightStrip()
         print("reset_method_callback cleandup done")
+        executingStep = False
 
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3]  # Pass function objects directly
@@ -138,6 +150,9 @@ async def main():
     stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback)
 
     async def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
+      if executingStep:
+        print(f"executingStep - Callback NOT invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
+        return
       print(f"Callback invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
       await stepper.execute_step()
     
