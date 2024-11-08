@@ -2,7 +2,7 @@ import time
 import asyncio
 
 class Stepper:
-    def __init__(self, steps, step_wait_time, end_timer_reset, step_methods, reset_method=None):
+    def __init__(self, steps, step_wait_time, end_timer_reset, step_methods, reset_method=None, end_step_called=None):
         self.steps = steps  # Total number of steps
         self.current_step = 0  # Current step index
         self.step_wait_time = step_wait_time  # Time to wait between steps
@@ -10,6 +10,7 @@ class Stepper:
         self.last_step_time = time.time()  # Track last step execution time
         self.step_methods = step_methods  # List of step method functions
         self.reset_method = reset_method
+        self.end_step_called = end_step_called
 
     async def execute_step(self):
         current_time = time.time()
@@ -21,6 +22,8 @@ class Stepper:
                 if method:
                     print(f"Executing {method.__name__}...")
                     await method()  # Await the method call
+                    if self.end_step_called:
+                        await self.end_step_called()
                 
                 self.last_step_time = current_time  # Update last step execution time
                 self.current_step += 1  # Increment to the next step
