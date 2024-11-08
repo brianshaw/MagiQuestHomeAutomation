@@ -22,11 +22,14 @@ class Stepper:
                 if method:
                     print(f"Executing {method.__name__}...")
                     await method()  # Await the method call
-                    if self.end_step_called:
-                        await self.end_step_called()
                 
                 self.last_step_time = current_time  # Update last step execution time
                 self.current_step += 1  # Increment to the next step
+
+                # Start a timer to call end_step_called
+                await asyncio.sleep(self.step_wait_time)  # Wait for the step wait time
+                if self.end_step_called:
+                    await self.end_step_called()  # Call the end step callback if defined
 
                 if self.current_step == self.steps:
                     print("All steps executed.")
@@ -43,27 +46,31 @@ class Stepper:
         self.last_step_time = time.time()
         # Perform cleanup tasks here
         if self.reset_method:
-            await self.reset_method()  # Call the reset method if definedß
+            await self.reset_method()  # Call the reset method if defined
         print("Stepper process reset.")
 
-# # Define step methods
-# def step1():
+# # Example step methods
+# async def step1():
 #     print("Executing Step 1")
-#     # Perform Step 1 operations here
+#     await asyncio.sleep(1)  # Simulate a delay for step execution
 
-# def step2():
+# async def step2():
 #     print("Executing Step 2")
-#     # Perform Step 2 operations here
+#     await asyncio.sleep(1)  # Simulate a delay for step execution
 
-# def step3():
+# async def step3():
 #     print("Executing Step 3")
-#     # Perform Step 3 operations here
+#     await asyncio.sleep(1)  # Simulate a delay for step execution
 
-# def main():
+# async def end_step_callback():
+#     print("End of step time reached!")
+
+# async def main():
 #     # List of methods to be executed as steps
 #     step_methods = [step1, step2, step3]  # Pass function objects directly
 #     end_timer_reset = 5  # Time to wait before resetting after all steps executed
-#     stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset, step_methods=step_methods)
+#     stepper = Stepper(steps=len(step_methods), step_wait_time=2, end_timer_reset=end_timer_reset,
+#                       step_methods=step_methods, end_step_called=end_step_callback)
 
 #     print("Press 'Enter' to execute the next step (or type 'exit' to quit).")
 
@@ -72,7 +79,7 @@ class Stepper:
 #         if user_input.lower() == 'exit':
 #             print("Exiting the program.")
 #             break
-#         stepper.execute_step()
+#         await stepper.execute_step()  # Await the execution of the step
 
 # if __name__ == "__main__":
-#     main()
+#     asyncio.run(main())
