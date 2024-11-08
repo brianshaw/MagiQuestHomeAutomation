@@ -9,7 +9,7 @@ print(f'soundpath {soundpath}')
 # Dictionary of sounds
 sounds = {
     '0': 'ding-126626.mp3',
-    '1': 'mixkit-strong-close-thunder-explosion-1300.mp3',
+    '1': 'mixkit-mixkit-wind-blowing-ambience-2658.mp3',
     '2': 'mixkit-rain-long-loop-2394.mp3',
     '3': 'mixkit-strong-close-thunder-explosion-1300.mp3',
     '4': 'AUDIO_8540.mp3',

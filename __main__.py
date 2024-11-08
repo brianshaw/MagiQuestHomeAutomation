@@ -131,12 +131,19 @@ async def main():
         # Perform Step 2 operations here
         # asyncio.run(lights.onLight(1))
         # await Sound.test(app=app)
-        await Sound.playsound('1', app=app)
+        Sound.playsound('1', app=app)
         await lights.onLight(1)
         executingStep = False
 
     async def step3():
         print("Start Doing Step 3")
+        executingStep = True
+        rpiButtonsLeds.ledOff()
+        
+        executingStep = False
+    
+    async def step4():
+        print("Start Doing Step 4")
         executingStep = True
         rpiButtonsLeds.ledOff()
         # Perform Step 3 operations here
@@ -150,12 +157,13 @@ async def main():
         # Perform cleanup tasks here
         await lights.resetLightStrip()
         print("reset_method_callback cleandup done")
+        rpiButtonsLeds.ledOn()
         executingStep = False
 
     async def end_step_called():
        rpiButtonsLeds.ledOn()
     # List of methods to be executed as steps
-    step_methods = [step1, step2, step3]  # Pass function objects directly
+    step_methods = [step1, step2, step3, step4]  # Pass function objects directly
     end_timer_reset = 5  # Time to wait before resetting after all steps executed
     stepper = Stepper(steps=len(step_methods), step_wait_time=5, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback, end_step_called=end_step_called)
 
