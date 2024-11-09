@@ -60,10 +60,7 @@ def playbackgroundsound(key, app='afplay', vol=50):
     # process = asyncio.create_subprocess_shell(command)
     print(f'appcommands {appcommands}')
     if key == 'bg1' or key == 'bg2':
-        proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
-                       shell=True, preexec_fn=os.setsid)
-        if proAmbient.stdin is not None:
-            proAmbient.stdin.write(b'GAIN 15\n')
+        proAmbient = subprocess.Popen(appcommands, stdout=subprocess.PIPE, preexec_fn=os.setsid)
     if key == '2':
         proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
