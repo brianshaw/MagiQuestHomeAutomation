@@ -60,7 +60,7 @@ class RpiButtonsLeds:
                 self.t0 = time.time()
             self.t1 = time.time()
             total = self.t1-self.t0
-            if (total > 0.5 and self.buttonPressed is not False):
+            if (total > 0.5 and self.buttonPressed is not True):
               print(f"Button was pressed! {total}")
               if self.buttonCallback:
                 self.buttonCallback()
