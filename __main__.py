@@ -219,7 +219,6 @@ async def main():
             await stepper.execute_step()
       except KeyboardInterrupt:
           print("Exiting the program.")
-          Sound.killall()
   finally:
       # Ensure cleanup is called before exit
       await cleanup()
@@ -228,6 +227,7 @@ async def main():
 async def cleanup():
     global rpiButtonsLeds, lights
     print('Cleaning up...')
+    Sound.killall()
     if rpiButtonsLeds:
         print('Cleaning up RpiButtonsLeds...')
         rpiButtonsLeds.ledOff()
