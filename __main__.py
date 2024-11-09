@@ -219,6 +219,7 @@ async def main():
             await stepper.execute_step()
       except KeyboardInterrupt:
           print("Exiting the program.")
+          Sound.killall()
   finally:
       # Ensure cleanup is called before exit
       await cleanup()

@@ -31,10 +31,15 @@ sounds = {
 
 def playbackgroundsound(key, app='afplay', vol=50):
     global pro, proRain, proAmbient
+    appcommands = [app]
     if app == 'afplay':
         appWithVol = f'{app} -v 1'
+        appcommands.append('-v')
+        appcommands.append('1')
     else:
         appWithVol = f'{app} --gain {vol}'
+        appcommands.append('-g')
+        appcommands.append(vol)
     if proAmbient is not None:
         killbackgroundsound(process=proAmbient)
     if pro is not None:
@@ -47,17 +52,18 @@ def playbackgroundsound(key, app='afplay', vol=50):
         killRain()
     # Build the command
     command = f'{appWithVol} {soundpath}{sounds[key]}'
+    appcommands.append(f'{soundpath}{sounds[key]}')
     # command = f'{app} {soundpath}{sounds[key]}'
     # Create an asynchronous subprocess
     # process = asyncio.create_subprocess_shell(command)
     if key == 'bg1' or key == 'bg2':
-        proAmbient = subprocess.Popen(f'{command} -l 0', stdout=subprocess.PIPE, 
+        proAmbient = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
     if key == '2':
-        proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
+        proRain = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
     else:
-        pro = subprocess.Popen(command, stdout=subprocess.PIPE, 
+        pro = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
                            shell=True, preexec_fn=os.setsid) 
 
 def killRain():
@@ -67,7 +73,17 @@ def killbackgroundsound(process):
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except ProcessLookupError:
         print("Process has already terminated.")
-    
+def killall():
+    if proAmbient is not None:
+        killbackgroundsound(process=proAmbient)
+    if pro is not None:
+        killbackgroundsound(process=pro)
+    if proRain is not None and key == '4':
+        timer = threading.Timer(4, killRain)  # 2 seconds delay
+        timer.start()
+    if proRain is not None and key == '5':
+        print('kill rain')
+        killRain()
     
 # Asynchronous function to play sound
 async def playsound(key, app='afplay'):
