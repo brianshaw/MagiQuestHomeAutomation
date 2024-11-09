@@ -5,6 +5,7 @@ import Sound
 from Stepper import Stepper
 from magiquest_receiver import MagiQuestReceiver
 import asyncio
+import psutil
 
 import atexit
 
@@ -14,6 +15,11 @@ lights = None
 async def main():
   try:
     
+    for p in psutil.process_iter():
+        if 'mpg321' in p.name() or 'mpg321' in ' '.join(p.cmdline()):
+            p.terminate()
+            p.wait()
+
     global rpiButtonsLeds, lights
     parser = argparse.ArgumentParser()
 
