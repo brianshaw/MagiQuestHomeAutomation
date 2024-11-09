@@ -117,9 +117,16 @@ class MagiQuestReceiver:
             self.debug_print(f"Human-readable magnitude: {human_readable_magnitude}")
             self.debug_print(f"Decoded wand_id: 0x{wand_id:08x}, magnitude: {magnitude:#06x} (human-readable: {human_readable_magnitude})")
 
+            # Pause listening while the callback is executing
+            self.set_pause_listening(True)
+
             # Call the success callback if provided
             if self.successCallback:
                 await self.successCallback(wand_id, magnitude, human_readable_magnitude)
+            
+            # Resume listening after the callback is done
+            self.set_pause_listening(False)
+
         else:
             self.debug_print("Invalid stop bit.")
 
@@ -137,7 +144,8 @@ class MagiQuestReceiver:
             return
 
         # Add pulse length to the queue for processing in the main loop
-        self.pulse_queue.put(pulse_length)
+        if not self.pause_listening:  # Only process pulses if we're not paused
+            self.pulse_queue.put(pulse_length)
 
     async def start(self):
         print("MagiQuest receiver started. Listening for signals...")  # Always print this message

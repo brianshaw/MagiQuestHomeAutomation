@@ -192,9 +192,7 @@ async def main():
         print(f"executingStep - Callback NOT invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
         return
       print(f"Callback invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
-      receiver.set_pause_listening(True)
       await stepper.execute_step()
-      receiver.set_pause_listening(False)
     
     debug=False
     if args['debug']:
