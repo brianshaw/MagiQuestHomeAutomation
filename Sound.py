@@ -23,7 +23,7 @@ sounds = {
     '2': 'mixkit-rain-long-loop-2394.mp3',
     '3': 'mixkit-strong-close-thunder-explosion-1300.mp3',
     '4': 'mixkit-electricity-lightning-blast-2601.mp3',
-    '5': 'AUDIO_8540.mp3',
+    '5': 'AUDIO_8540small.mp3',
 }
 
 def playbackgroundsound(key, app='afplay'):
