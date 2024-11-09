@@ -4,3 +4,4 @@ pigpio
 argparse
 RPi.GPIO
 asyncio_atexit
+psutil
