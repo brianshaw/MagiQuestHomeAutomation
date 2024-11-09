@@ -15,10 +15,13 @@ lights = None
 async def main():
   try:
     
-    for p in psutil.process_iter():
-        if 'mpg321' in p.name() or 'mpg321' in ' '.join(p.cmdline()):
-            p.terminate()
-            p.wait()
+    try:
+        for p in psutil.process_iter():
+            if 'mpg321' in p.name() or 'mpg321' in ' '.join(p.cmdline()):
+                p.terminate()
+                p.wait()
+    except psutil.AccessDenied:
+       print('AccessDenied')
 
     global rpiButtonsLeds, lights
     parser = argparse.ArgumentParser()
@@ -56,6 +59,14 @@ async def main():
     other_args.add_argument(
         "-v", "--verbose", action="store_true", help="Verbose output"
     )
+    other_args.add_argument(
+        "-P", "--powerstrip_ip", action="store", type=str,
+        help="IP address of the power strip"
+    )
+    other_args.add_argument(
+        "-P2", "--powerstrip_ip2", action="store", type=str,
+        help="IP address of the power strip"
+    )
     # other_args.add_argument(
     #     "-T", "--test", action="store_true", default=False,
     #     help="test"
@@ -64,12 +75,17 @@ async def main():
 
     args = vars(parser.parse_args())
 
+    powerstrip_ip = args.get("powerstrip_ip", None)
+    powerstrip_ip2 = args.get("powerstrip_ip2", None)
+    
+
     # print(f'args {args}')
     if args["light"]:
         # import asyncio
         lightsTest = kasalights.LightControl().start()
         if args["light"] == 'strip':
             asyncio.run(lightsTest.testStrip())
+            asyncio.run(lightsTest.testStrip2())
         else:
             asyncio.run(lightsTest.test())
         exit()
@@ -116,10 +132,13 @@ async def main():
       rpiButtonsLeds = RpiButtonsLeds()
 
     # import asyncio
-    lights = kasalights.LightControl().start()
+    lights = kasalights.LightControl()
+    lights.start(powerstrip_ip=powerstrip_ip, powerstrip_ip2=powerstrip_ip2)
+    
     executingStep = False
     # asyncio.run(lights.testStrip(dur=1))
-    await lights.testStrip(dur=1)
+    await lights.testStrip(dur=0.5)
+    await lights.testStrip2(dur=0.5)
     # Define step methods
     async def step1():
         print("Start Doing Step 1")
@@ -138,7 +157,7 @@ async def main():
         executingStep = True
         if args['rpi']: rpiButtonsLeds.ledOff()
         # Perform Step 2 operations here
-        # await lights.onLight(1) # working putbackin
+        await lights.onLight(1) # working putbackin
         Sound.playbackgroundsound('2', app=app)
         # await Sound.playsound('2', app=app)
         await lights.flashLight2(lightkey=1, times=5, dur=0.5)

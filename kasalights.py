@@ -15,8 +15,16 @@ class LightControl():
     self.devices = {}
     self.lightsready = False
 
-  def start(self):
-    self.devices['powerstrip'] = SmartStrip('192.168.37.210')
+  def start(self, powerstrip_ip=None, powerstrip_ip2=None):
+    if not powerstrip_ip:
+      self.devices['powerstrip'] = SmartStrip('192.168.37.210')
+    else:
+      self.devices['powerstrip'] = SmartStrip(powerstrip_ip)
+    
+    if powerstrip_ip2:
+      self.devices['powerstrip2'] = SmartStrip(powerstrip_ip2)
+    else:
+      self.devices['powerstrip2'] = SmartStrip('192.168.37.121')      
     # self.devices['powerstrip2'] = SmartStrip('192.168.37.210')
     # self.devices['powerstrip'] = SmartStrip('192.168.8.185')
     # self.devices['plug'] = SmartPlug('192.168.8.121')
@@ -58,6 +66,23 @@ class LightControl():
     await self.devices['powerstrip'].children[2].turn_off()
     await asyncio.sleep(dur)
     # await self.devices['powerstrip'].turn_off()
+  
+  async def testStrip2 (self, dur=0.5):
+    print('test power strip 2 - 1, 2, 3')
+    await self.devices['powerstrip2'].update()
+    await self.devices['powerstrip2'].children[0].turn_on()
+    await asyncio.sleep(dur)
+    await self.devices['powerstrip2'].children[1].turn_on()
+    await asyncio.sleep(dur)
+    await self.devices['powerstrip2'].children[2].turn_on()
+    await asyncio.sleep(dur)
+    await self.devices['powerstrip2'].children[0].turn_off()
+    await asyncio.sleep(dur)
+    await self.devices['powerstrip2'].children[1].turn_off()
+    await asyncio.sleep(dur)
+    await self.devices['powerstrip2'].children[2].turn_off()
+    await asyncio.sleep(dur)
+    # await self.devices['powerstrip'].turn_off()
 
   async def onPlugLight (self):
     await self.devices['plug'].update()
@@ -74,16 +99,16 @@ class LightControl():
     await self.devices['powerstrip'].children[lightkey].turn_off()
   
   async def onLight2 (self, lightkey):
-    await self.devices['powerstrip'].update()
-    await self.devices['powerstrip'].children[lightkey].turn_on()
-    # await self.devices['powerstrip2'].update()
-    # await self.devices['powerstrip2'].children[lightkey].turn_on()
+    # await self.devices['powerstrip'].update()
+    # await self.devices['powerstrip'].children[lightkey].turn_on()
+    await self.devices['powerstrip2'].update()
+    await self.devices['powerstrip2'].children[lightkey].turn_on()
   
   async def offLight2 (self, lightkey):
-    await self.devices['powerstrip'].update()
-    await self.devices['powerstrip'].children[lightkey].turn_off()
-    # await self.devices['powerstrip2'].update()
-    # await self.devices['powerstrip2'].children[lightkey].turn_on()
+    # await self.devices['powerstrip'].update()
+    # await self.devices['powerstrip'].children[lightkey].turn_off()
+    await self.devices['powerstrip2'].update()
+    await self.devices['powerstrip2'].children[lightkey].turn_off()
 
   async def flashLight2 (self, lightkey, times=3, dur=0.5):
     for i in range(times):
@@ -101,12 +126,19 @@ class LightControl():
     await self.devices['powerstrip'].children[1].turn_off()
     await self.devices['powerstrip'].children[2].turn_off()
   
+  async def resetLightStrip2 (self):
+    await self.devices['powerstrip2'].update()
+    await self.devices['powerstrip2'].children[0].turn_off()
+    await self.devices['powerstrip2'].children[1].turn_off()
+    await self.devices['powerstrip2'].children[2].turn_off()
+  
   async def resetLightPlug (self):
     await self.devices['plug'].update()
     await self.devices['plug'].turn_off()
 
   async def resetLights (self):
     await self.resetLightStrip()
+    await self.resetLightStrip2()
     await self.resetLightPlug()
     
   async def flashLights (self):
