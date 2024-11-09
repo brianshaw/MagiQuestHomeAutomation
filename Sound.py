@@ -60,7 +60,8 @@ def playbackgroundsound(key, app='afplay', vol=50):
     # process = asyncio.create_subprocess_shell(command)
     print(f'appcommands {appcommands}')
     if key == 'bg1' or key == 'bg2':
-        proAmbient = subprocess.Popen(appcommands, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+        proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
     if key == '2':
         proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
@@ -80,10 +81,7 @@ def killall():
         killbackgroundsound(process=proAmbient)
     if pro is not None:
         killbackgroundsound(process=pro)
-    if proRain is not None and key == '4':
-        timer = threading.Timer(4, killRain)  # 2 seconds delay
-        timer.start()
-    if proRain is not None and key == '5':
+    if proRain is not None:
         print('kill rain')
         killRain()
     

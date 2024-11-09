@@ -113,7 +113,7 @@ async def main():
     
     if args['rpi']:
       from rpi_buttons_leds import RpiButtonsLeds
-      rpiButtonsLeds = RpiButtonsLeds()
+      rpiButtonsLeds = RpiButtonsLeds(buttonCallback=reset_method_callback)
 
     # import asyncio
     lights = kasalights.LightControl().start()
@@ -174,6 +174,7 @@ async def main():
         print("reset_method_callback cleandup done")
         if args['rpi']: rpiButtonsLeds.ledOn()
         executingStep = False
+        Sound.killall()
         Sound.playbackgroundsound('bg1', app=app, vol=10)
 
     async def end_step_called():
