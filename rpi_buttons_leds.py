@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import asyncio
 
 class RpiButtonsLeds:
     LED_PIN = 16
@@ -75,6 +76,7 @@ class RpiButtonsLeds:
               self.t0 = -1
               self.t1 = -1
               self.buttonPressed = False
+          await asyncio.sleep(0.5)
             
       except KeyboardInterrupt:
           print("Exiting...")  # Always print this message

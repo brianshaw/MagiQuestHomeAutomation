@@ -222,7 +222,7 @@ async def main():
         #   await rpiButtonsLeds.checkButtons()
         await asyncio.gather(
             receiver.start(),
-            # rpiButtonsLeds.checkButtons()
+            rpiButtonsLeds.checkButtons()
         )
       
     else:
