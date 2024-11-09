@@ -6,6 +6,7 @@ class RpiButtonsLeds:
     BUTTON_PIN = 10
     t0 = -1
     t1 = -1
+    buttonPressed = False
 
       # total = t1-t0
 
@@ -54,22 +55,26 @@ class RpiButtonsLeds:
       try:
         while True:  
           if GPIO.input(self.BUTTON_PIN) == GPIO.HIGH:
-              # print("Button was pushed!")
-              if self.t0 == -1:
-                  self.t0 = time.time()
-              self.t1 = time.time()
-              total = self.t1-self.t0
-              if (total > 0.5):
-                  print(f"Button was pressed! {total}")
-                  if self.buttonCallback:
-                    self.buttonCallback()
+            # print("Button was pushed!")
+            if self.t0 == -1:
+                self.t0 = time.time()
+            self.t1 = time.time()
+            total = self.t1-self.t0
+            if (total > 0.5 and self.buttonPressed is not False):
+              print(f"Button was pressed! {total}")
+              if self.buttonCallback:
+                self.buttonCallback()
+              else:
+                print('No button callback')
+              self.buttonPressed = True
           elif self.t0 >= 0 and GPIO.input(self.BUTTON_PIN) == GPIO.LOW:
               # t1 = time.time()
               # total = t1-t0
               # if (total > 0.5):
-              #     print(f"Button was released! {total}")
+              print(f"Button was released! {total}")
               self.t0 = -1
               self.t1 = -1
+              self.buttonPressed = False
             
       except KeyboardInterrupt:
           print("Exiting...")  # Always print this message

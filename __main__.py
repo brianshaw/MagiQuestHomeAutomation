@@ -184,7 +184,7 @@ async def main():
        if args['rpi']: rpiButtonsLeds.ledOn()
        await lights.onLight2(1)
     
-    if rpiButtonsLeds:
+    if args['rpi']:
        rpiButtonsLeds.setButtonCallback(callback=reset_method_callback)
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3, step4]  # Pass function objects directly
