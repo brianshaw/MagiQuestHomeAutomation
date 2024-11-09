@@ -185,8 +185,7 @@ async def main():
        if args['rpi']: rpiButtonsLeds.ledOn()
        await lights.onLight2(1)
     
-    if args['rpi']:
-       rpiButtonsLeds.setButtonCallback(callback=reset_method_callback)
+    
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3, step4]  # Pass function objects directly
     end_timer_reset = 7  # Time to wait before resetting after all steps executed
@@ -199,6 +198,12 @@ async def main():
        end_step_called=end_step_called
     )
 
+    async def buttonPressed():
+        await stepper.reset()
+        
+    if args['rpi']:
+       rpiButtonsLeds.setButtonCallback(callback=buttonPressed)
+    
     async def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
       if executingStep:
         print(f"executingStep - Callback NOT invoked! Wand ID: {wand_id}, Magnitude: {magnitude}, Human-readable Magnitude: {human_readable_magnitude}")
