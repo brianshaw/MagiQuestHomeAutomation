@@ -118,39 +118,46 @@ async def main():
     async def step1():
         print("Start Doing Step 1")
         executingStep = True
-        rpiButtonsLeds.ledOff()
+        if args['rpi']: rpiButtonsLeds.ledOff()
         # asyncio.run(lights.testStrip())
         # asyncio.run(lights.onLight(0))
         await lights.onLight(0)
-        await Sound.playsound('1', app=app)
+        # await Sound.playsound('1', app=app)
+        Sound.playbackgroundsound('1', app=app)
+        await lights.flashLight2(lightkey=1, times=5, dur=0.5)
         executingStep = False
 
     async def step2():
         print("Start Doing Step 2")
         executingStep = True
-        rpiButtonsLeds.ledOff()
+        if args['rpi']: rpiButtonsLeds.ledOff()
         # Perform Step 2 operations here
-        # asyncio.run(lights.onLight(1))
-        # await Sound.test(app=app)
-        await lights.onLight(1)
-        await Sound.playsound('2', app=app)
+        # await lights.onLight(1) # working putbackin
+        Sound.playbackgroundsound('2', app=app)
+        # await Sound.playsound('2', app=app)
+        await lights.flashLight2(lightkey=1, times=5, dur=0.5)
         executingStep = False
 
     async def step3():
         print("Start Doing Step 3")
         executingStep = True
-        rpiButtonsLeds.ledOff()
-        await Sound.playsound('3', app=app)
+        if args['rpi']: rpiButtonsLeds.ledOff()
+        Sound.playbackgroundsound('3', app=app)
+        # await Sound.playsound('3', app=app)
+        await lights.flashLight2(lightkey=1, times=5, dur=0.5)
         executingStep = False
     
     async def step4():
         print("Start Doing Step 4")
         executingStep = True
-        rpiButtonsLeds.ledOff()
+        if args['rpi']: rpiButtonsLeds.ledOff()
         # Perform Step 3 operations here
         # asyncio.run(lights.onLight(2))
         await lights.onLight(2)
-        await Sound.playsound('4', app=app)
+        Sound.playbackgroundsound('4', app=app)
+        await asyncio.sleep(3)
+        await lights.flashLight2(lightkey=1, times=5, dur=0.5)
+        await Sound.playsound('5', app=app)
         executingStep = False
 
     async def reset_method_callback():
@@ -159,15 +166,24 @@ async def main():
         # Perform cleanup tasks here
         await lights.resetLightStrip()
         print("reset_method_callback cleandup done")
-        rpiButtonsLeds.ledOn()
+        if args['rpi']: rpiButtonsLeds.ledOn()
         executingStep = False
 
     async def end_step_called():
-       rpiButtonsLeds.ledOn()
+       print("end_step_called")
+       if args['rpi']: rpiButtonsLeds.ledOn()
+       await lights.onLight2(1)
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3, step4]  # Pass function objects directly
-    end_timer_reset = 5  # Time to wait before resetting after all steps executed
-    stepper = Stepper(steps=len(step_methods), step_wait_time=5, end_timer_reset=end_timer_reset, step_methods=step_methods, reset_method=reset_method_callback, end_step_called=end_step_called)
+    end_timer_reset = 7  # Time to wait before resetting after all steps executed
+    stepper = Stepper(
+       steps=len(step_methods),
+       step_wait_time=5,
+       end_timer_reset=end_timer_reset,
+       step_methods=step_methods,
+       reset_method=reset_method_callback,
+       end_step_called=end_step_called
+    )
 
     async def handle_success_callback(wand_id, magnitude, human_readable_magnitude):
       if executingStep:
@@ -179,6 +195,7 @@ async def main():
     debug=False
     if args['debug']:
         debug=True
+    
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
       # from rpi_buttons_leds import RpiButtonsLeds

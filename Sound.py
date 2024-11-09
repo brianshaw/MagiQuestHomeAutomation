@@ -1,5 +1,15 @@
 import asyncio
 import os
+import signal
+import subprocess
+import threading
+
+
+# The os.setsid() is passed in the argument preexec_fn so
+# it's run after the fork() and before  exec() to run the shell.
+
+pro = None
+proRain = None
 
 # Define the directory path
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -12,11 +22,45 @@ sounds = {
     '1': 'mixkit-wind-blowing-ambience-2658.mp3',
     '2': 'mixkit-rain-long-loop-2394.mp3',
     '3': 'mixkit-strong-close-thunder-explosion-1300.mp3',
-    '4': 'AUDIO_8540.mp3',
+    '4': 'mixkit-electricity-lightning-blast-2601.mp3',
+    '5': 'AUDIO_8540.mp3',
 }
 
+def playbackgroundsound(key, app='afplay'):
+    global pro, proRain
+    if pro is not None:
+        killbackgroundsound(process=pro)
+    if proRain is not None and key == '4':
+        timer = threading.Timer(4, killRain)  # 2 seconds delay
+        timer.start()
+    if proRain is not None and key == '5':
+        print('kill rain')
+        killRain()
+    # Build the command
+    command = f'{app} {soundpath}{sounds[key]}'
+    # Create an asynchronous subprocess
+    # process = asyncio.create_subprocess_shell(command)
+    if key == '2':
+        proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
+    else:
+        pro = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                           shell=True, preexec_fn=os.setsid) 
+
+def killRain():
+    killbackgroundsound(process=proRain)
+def killbackgroundsound(process):
+    try:
+        os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+    except ProcessLookupError:
+        print("Process has already terminated.")
+    
+    
 # Asynchronous function to play sound
 async def playsound(key, app='afplay'):
+    if proRain is not None and key == '5':
+        print('kill rain')
+        killbackgroundsound(process=proRain)
     # Build the command
     command = f'{app} {soundpath}{sounds[key]}'
     # Create an asynchronous subprocess
