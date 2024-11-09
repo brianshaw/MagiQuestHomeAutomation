@@ -62,7 +62,8 @@ def playbackgroundsound(key, app='afplay', vol=50):
     if key == 'bg1' or key == 'bg2':
         proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
-        proAmbient.stdin.write(b'GAIN 15\n')
+        if proAmbient.stdin is not None:
+            proAmbient.stdin.write(b'GAIN 15\n')
     if key == '2':
         proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
