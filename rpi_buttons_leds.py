@@ -51,7 +51,7 @@ class RpiButtonsLeds:
     def cleanup():
       GPIO.cleanup()
     
-    def checkButtons(self):
+    async def checkButtons(self):
       try:
         while True:  
           if GPIO.input(self.BUTTON_PIN) == GPIO.HIGH:
@@ -63,7 +63,7 @@ class RpiButtonsLeds:
             if (total > 0.5 and self.buttonPressed is not True):
               print(f"Button was pressed! {total}")
               if self.buttonCallback:
-                callbackdone = self.buttonCallback()
+                await self.buttonCallback()
               else:
                 print('No button callback')
               self.buttonPressed = True
