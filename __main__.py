@@ -113,7 +113,7 @@ async def main():
     
     if args['rpi']:
       from rpi_buttons_leds import RpiButtonsLeds
-      rpiButtonsLeds = RpiButtonsLeds(buttonCallback=reset_method_callback)
+      rpiButtonsLeds = RpiButtonsLeds()
 
     # import asyncio
     lights = kasalights.LightControl().start()
@@ -183,6 +183,9 @@ async def main():
        print("end_step_called continueing")
        if args['rpi']: rpiButtonsLeds.ledOn()
        await lights.onLight2(1)
+    
+    if rpiButtonsLeds:
+       rpiButtonsLeds.setButtonCallback(callback=reset_method_callback)
     # List of methods to be executed as steps
     step_methods = [step1, step2, step3, step4]  # Pass function objects directly
     end_timer_reset = 7  # Time to wait before resetting after all steps executed

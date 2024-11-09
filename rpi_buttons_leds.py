@@ -5,12 +5,15 @@ class RpiButtonsLeds:
     LED_PIN = 16
     BUTTON_PIN = 10
 
-    def __init__(self, buttonCallback=None, debug=False):
-      self.buttonCallback = buttonCallback
+    def __init__(self, debug=False):
+      self.buttonCallback = None
       self.setupGPIO()
       self.setup_buttons()
       self.setup_leds()
 
+    def setButtonCallback(self, callback):
+      self.buttonCallback = callback
+      
     def setupGPIO(self):
       GPIO.setwarnings(False) # Ignore warning for now
       GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
