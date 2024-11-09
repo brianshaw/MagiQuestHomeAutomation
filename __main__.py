@@ -180,7 +180,7 @@ async def main():
         # asyncio.run(lights.onLight(2))
         await lights.onLight(2)
         Sound.playbackgroundsound('4', app=app)
-        await asyncio.sleep(3)
+        # await asyncio.sleep(3)
         await lights.flashLight2(lightkey=1, times=5, dur=0.5)
         await Sound.playsound('5', app=app)
         executingStep = False
