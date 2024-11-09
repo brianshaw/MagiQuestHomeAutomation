@@ -212,12 +212,16 @@ async def main():
     Sound.playbackgroundsound('bg1', app=app, vol=10)
 
     if args['rpi']:
-      receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
-      # from rpi_buttons_leds import RpiButtonsLeds
-      # rpiButtonsLeds = RpiButtonsLeds()
-      rpiButtonsLeds.ledOn()
-      await receiver.start()
-      rpiButtonsLeds.checkButtons()
+        receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
+        # from rpi_buttons_leds import RpiButtonsLeds
+        # rpiButtonsLeds = RpiButtonsLeds()
+        rpiButtonsLeds.ledOn()
+        # await receiver.start()
+        #   await rpiButtonsLeds.checkButtons()
+        await asyncio.gather(
+            receiver.start(),
+            rpiButtonsLeds.checkButtons()
+        )
       
     else:
       print("Press the space bar to execute the next step.")
