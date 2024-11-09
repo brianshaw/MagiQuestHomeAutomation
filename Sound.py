@@ -31,11 +31,12 @@ sounds = {
 
 def playbackgroundsound(key, app='afplay', vol=50):
     global pro, proRain, proAmbient
-    appcommands = []
+    appcommands = [app]
     if app == 'afplay':
         appWithVol = f'{app} -v 1'
+        appcommands.append('-v')
+        appcommands.append('1')
     else:
-        appcommands.append(app)
         appWithVol = f'{app} -g {vol}'
         if key == 'bg1' or key == 'bg2':
             appWithVol = f'{appWithVol} -l 0'
@@ -52,35 +53,22 @@ def playbackgroundsound(key, app='afplay', vol=50):
         print('kill rain')
         killRain()
     # Build the command
-    if app == 'afplay':
-        command = f'{appWithVol} {soundpath}{sounds[key]}'
-    else:
-        appcommands.append(f'{soundpath}{sounds[key]}')
+    command = f'{appWithVol} {soundpath}{sounds[key]}'
+    appcommands.append(f'{soundpath}{sounds[key]}')
     # command = f'{app} {soundpath}{sounds[key]}'
     # Create an asynchronous subprocess
     # process = asyncio.create_subprocess_shell(command)
     print(f'appcommands {appcommands}')
     if key == 'bg1' or key == 'bg2':
-        if appcommands:
-            proAmbient = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid)
-        else:
-            proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid)
-    if key == '2':
-        if appcommands:
-            proRain = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
+        proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
-        else:
-            proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid)
+        proAmbient.stdin.write(b'GAIN 15\n')
+    if key == '2':
+        proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
     else:
-        if appcommands:
-            pro = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid)
-        else:
-            pro = subprocess.Popen(command, stdout=subprocess.PIPE, 
-                               shell=True, preexec_fn=os.setsid) 
+        pro = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                           shell=True, preexec_fn=os.setsid) 
 
 def killRain():
     killbackgroundsound(process=proRain)
