@@ -217,7 +217,7 @@ async def main():
       # rpiButtonsLeds = RpiButtonsLeds()
       rpiButtonsLeds.ledOn()
       await receiver.start()
-      await rpiButtonsLeds.checkButtons()
+      rpiButtonsLeds.checkButtons()
       
     else:
       print("Press the space bar to execute the next step.")
