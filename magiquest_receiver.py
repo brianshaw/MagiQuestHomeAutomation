@@ -24,6 +24,7 @@ class MagiQuestReceiver:
         self.successCallback = successCallback
         self.debug = debug
         self.pulse_queue = queue.Queue()
+        self.pause_listening = False
         
         if not self.pi.connected:
             raise Exception("Failed to connect to pigpio daemon.")
@@ -35,7 +36,8 @@ class MagiQuestReceiver:
     def debug_print(self, message):
         if self.debug:
             print(message)
-
+    def set_pause_listening(self, value):
+        self.pause_listening = value
     def is_within_tolerance(self, value, target):
         return abs(value - target) <= self.TOLERANCE
 
@@ -141,8 +143,12 @@ class MagiQuestReceiver:
         print("MagiQuest receiver started. Listening for signals...")  # Always print this message
         try:
             while True:
-                await self.decode_pulses()  # Process the queue for pulses
-                await asyncio.sleep(0.1)  # Check for new pulses periodically
+                if self.pause_listening:
+                    await asyncio.sleep(0.1)
+                    continue
+                else:
+                    await self.decode_pulses()  # Process the queue for pulses
+                    await asyncio.sleep(0.1)  # Check for new pulses periodically
         except KeyboardInterrupt:
             print("Exiting...")  # Always print this message
             if self.pulses:

@@ -7,6 +7,7 @@ from kasa import SmartPlug, SmartDevice, SmartStrip
 # kasa discover
 ############################################################################
 
+# kasa.exceptions.KasaException
 class LightControl():
   def __init__(self):
     print('Lights enabled')
