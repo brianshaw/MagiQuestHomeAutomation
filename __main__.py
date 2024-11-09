@@ -168,6 +168,7 @@ async def main():
         print("reset_method_callback cleandup done")
         if args['rpi']: rpiButtonsLeds.ledOn()
         executingStep = False
+        Sound.playbackgroundsound('bg1', app=app, vol=50)
 
     async def end_step_called():
        print("end_step_called waiting")
@@ -198,13 +199,14 @@ async def main():
     if args['debug']:
         debug=True
     
+    Sound.playbackgroundsound('bg1', app=app, vol=50)
+
     if args['rpi']:
       receiver = MagiQuestReceiver(successCallback=handle_success_callback, debug=debug)
       # from rpi_buttons_leds import RpiButtonsLeds
       # rpiButtonsLeds = RpiButtonsLeds()
       rpiButtonsLeds.ledOn()
       await receiver.start()
-      
       
     else:
       print("Press the space bar to execute the next step.")

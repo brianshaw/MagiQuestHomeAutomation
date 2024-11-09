@@ -10,6 +10,7 @@ import threading
 
 pro = None
 proRain = None
+proAmbient = None
 
 # Define the directory path
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -24,10 +25,18 @@ sounds = {
     '3': 'mixkit-strong-close-thunder-explosion-1300.mp3',
     '4': 'mixkit-electricity-lightning-blast-2601.mp3',
     '5': 'AUDIO_8540small.mp3',
+    'bg1': '43-AshHills.mp3',
+    'bg2': '09-Barnabas.mp3',
 }
 
-def playbackgroundsound(key, app='afplay'):
-    global pro, proRain
+def playbackgroundsound(key, app='afplay', vol=100):
+    global pro, proRain, proAmbient
+    if app == 'afplay':
+        appWithVol = f'{app} -v 1'
+    else:
+        appWithVol = f'{app} --gain {vol}'
+    if proAmbient is not None:
+        killbackgroundsound(process=proAmbient)
     if pro is not None:
         killbackgroundsound(process=pro)
     if proRain is not None and key == '4':
@@ -37,9 +46,13 @@ def playbackgroundsound(key, app='afplay'):
         print('kill rain')
         killRain()
     # Build the command
-    command = f'{app} {soundpath}{sounds[key]}'
+    command = f'{appWithVol} {soundpath}{sounds[key]}'
+    # command = f'{app} {soundpath}{sounds[key]}'
     # Create an asynchronous subprocess
     # process = asyncio.create_subprocess_shell(command)
+    if key == 'bg1' or key == 'bg2':
+        proAmbient = subprocess.Popen(f'{command} -l 0', stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
     if key == '2':
         proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
