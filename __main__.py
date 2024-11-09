@@ -171,6 +171,7 @@ async def main():
         executingStep = True
         # Perform cleanup tasks here
         await lights.resetLightStrip()
+        await lights.onLight2(1)
         print("reset_method_callback cleandup done")
         if args['rpi']: rpiButtonsLeds.ledOn()
         executingStep = False
@@ -216,6 +217,7 @@ async def main():
         # from rpi_buttons_leds import RpiButtonsLeds
         # rpiButtonsLeds = RpiButtonsLeds()
         rpiButtonsLeds.ledOn()
+        await lights.onLight2(1)
         # await receiver.start()
         #   await rpiButtonsLeds.checkButtons()
         await asyncio.gather(
