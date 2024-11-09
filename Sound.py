@@ -37,9 +37,11 @@ def playbackgroundsound(key, app='afplay', vol=50):
         appcommands.append('-v')
         appcommands.append('1')
     else:
-        appWithVol = f'{app} --gain {vol}'
+        appWithVol = f'{app} -g {vol}'
+        if key == 'bg1' or key == 'bg2':
+            appWithVol = f'{appWithVol} -l 0'
         appcommands.append('-g')
-        appcommands.append(vol)
+        appcommands.append(f'{vol}')
     if proAmbient is not None:
         killbackgroundsound(process=proAmbient)
     if pro is not None:
@@ -56,14 +58,15 @@ def playbackgroundsound(key, app='afplay', vol=50):
     # command = f'{app} {soundpath}{sounds[key]}'
     # Create an asynchronous subprocess
     # process = asyncio.create_subprocess_shell(command)
+    print(f'appcommands {appcommands}')
     if key == 'bg1' or key == 'bg2':
-        proAmbient = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
+        proAmbient = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
     if key == '2':
-        proRain = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
+        proRain = subprocess.Popen(command, stdout=subprocess.PIPE, 
                        shell=True, preexec_fn=os.setsid)
     else:
-        pro = subprocess.Popen(appcommands, stdout=subprocess.PIPE, 
+        pro = subprocess.Popen(command, stdout=subprocess.PIPE, 
                            shell=True, preexec_fn=os.setsid) 
 
 def killRain():
