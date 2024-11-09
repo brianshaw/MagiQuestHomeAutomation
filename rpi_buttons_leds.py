@@ -4,6 +4,10 @@ import time
 class RpiButtonsLeds:
     LED_PIN = 16
     BUTTON_PIN = 10
+    t0 = -1
+    t1 = -1
+
+      # total = t1-t0
 
     def __init__(self, debug=False):
       self.buttonCallback = None
@@ -20,10 +24,7 @@ class RpiButtonsLeds:
     
     def setup_buttons(self):
       print('setup buttons')
-      t0 = -1
-      t1 = -1
-
-      # total = t1-t0
+      
       GPIO.setwarnings(False) # Ignore warning for now
       GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
       GPIO.setup(self.BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
@@ -54,21 +55,21 @@ class RpiButtonsLeds:
         while True:  
           if GPIO.input(self.BUTTON_PIN) == GPIO.HIGH:
               # print("Button was pushed!")
-              if t0 == -1:
-                  t0 = time.time()
-              t1 = time.time()
-              total = t1-t0
+              if self.t0 == -1:
+                  self.t0 = time.time()
+              self.t1 = time.time()
+              total = self.t1-self.t0
               if (total > 0.5):
                   print(f"Button was pressed! {total}")
                   if self.buttonCallback:
                     self.buttonCallback()
-          elif t0 >= 0 and GPIO.input(self.BUTTON_PIN) == GPIO.LOW:
+          elif self.t0 >= 0 and GPIO.input(self.BUTTON_PIN) == GPIO.LOW:
               # t1 = time.time()
               # total = t1-t0
               # if (total > 0.5):
               #     print(f"Button was released! {total}")
-              t0 = -1
-              t1 = -1
+              self.t0 = -1
+              self.t1 = -1
             
       except KeyboardInterrupt:
           print("Exiting...")  # Always print this message
