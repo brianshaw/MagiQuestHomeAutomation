@@ -170,7 +170,9 @@ async def main():
         executingStep = False
 
     async def end_step_called():
-       print("end_step_called")
+       print("end_step_called waiting")
+       await asyncio.sleep(4)
+       print("end_step_called continueing")
        if args['rpi']: rpiButtonsLeds.ledOn()
        await lights.onLight2(1)
     # List of methods to be executed as steps
@@ -178,7 +180,7 @@ async def main():
     end_timer_reset = 7  # Time to wait before resetting after all steps executed
     stepper = Stepper(
        steps=len(step_methods),
-       step_wait_time=5,
+       step_wait_time=10,
        end_timer_reset=end_timer_reset,
        step_methods=step_methods,
        reset_method=reset_method_callback,

@@ -1,5 +1,6 @@
 import time
 import asyncio
+import threading
 
 class Stepper:
     def __init__(self, steps, step_wait_time, end_timer_reset, step_methods, reset_method=None, end_step_called=None):
@@ -26,10 +27,13 @@ class Stepper:
                 self.last_step_time = current_time  # Update last step execution time
                 self.current_step += 1  # Increment to the next step
 
-                # Start a timer to call end_step_called
-                await asyncio.sleep(self.step_wait_time)  # Wait for the step wait time
+                
+                # # Start a timer to call end_step_called
+                # await asyncio.sleep(self.step_wait_time)  # Wait for the step wait time
                 if self.end_step_called:
                     await self.end_step_called()  # Call the end step callback if defined
+                # timer = threading.Timer(self.step_wait_time, self.call_end_step_called)  # 2 seconds delay
+                # timer.start()
 
                 if self.current_step == self.steps:
                     print("All steps executed.")
@@ -40,6 +44,10 @@ class Stepper:
         else:
             print("All steps executed.")
 
+    # async def call_end_step_called(self):
+    #     if self.end_step_called:
+    #         endcall = await self.end_step_called()
+    
     async def reset(self):
         print("Resetting the stepper process...")
         self.current_step = 0
