@@ -29,7 +29,7 @@ sounds = {
     'bg2': '09-Barnabas.mp3',
 }
 
-def playbackgroundsound(key, app='afplay', vol=100):
+def playbackgroundsound(key, app='afplay', vol=50):
     global pro, proRain, proAmbient
     if app == 'afplay':
         appWithVol = f'{app} -v 1'
